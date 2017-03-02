@@ -1,18 +1,131 @@
 <html>
-    <head>
-        <title>Hello Angular 2</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="node_modules/core-js/client/shim.min.js"></script>
-        <script src="node_modules/zone.js/dist/zone.js"></script>
-        <script src="node_modules/reflect-metadata/Reflect.js"></script>
-        <script src="node_modules/systemjs/dist/system.src.js"></script>
-        <script src="systemjs.config.js"></script>
-        <script>
-          System.import('app').catch(function(err){ console.error(err); });
-        </script>
-    </head>
-    <body>
-        <my-app>Загрузка...</my-app>
-    </body>
+
+<head>
+    <title>Hello Angular 2</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('app').catch(function (err) { console.error(err); });
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Foggy Secrets Web</h1>
+            <p class="lead">Basic grid layouts to get you familiar with building within the Bootstrap grid system.</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <my-app class="hide">Загрузка...</my-app>
+
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="sr-only" for="inputPassword">Password</label>
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <div class="input-group-addon">Password</div>
+                                <input type="password" class="form-control" id="inputPassword" placeholder="Secret phrase">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="upload-panel">
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Files</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div id="files" class="row list-group">
+                            <div class="item  col-xs-12">
+                                <div class="thumbnail">
+                                    <div class="caption">
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <h4 class="group inner list-group-item-heading">
+                                                    File name 1</h4>
+                                                <p class="group inner list-group-item-text">
+                                                    <strong>Encrypted</strong>, Size: 15 kByte, Date: 1/25/2017 00:12</p>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <a class="btn btn-success pull-right" href="#">Download</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="files" class="row list-group">
+                            <div class="item  col-xs-12">
+                                <div class="thumbnail">
+                                    <div class="caption">
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <h4 class="group inner list-group-item-heading">
+                                                    File name 1</h4>
+                                                <p class="group inner list-group-item-text">
+                                                    <strong>Encrypted</strong>, Size: 15 kByte, Date: 1/25/2017 00:12</p>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <a class="btn btn-success pull-right" href="#">Download</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="files" class="row list-group">
+                            <div class="item  col-xs-12">
+                                <div class="thumbnail">
+                                    <div class="caption">
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <h4 class="group inner list-group-item-heading">
+                                                    File name 1</h4>
+                                                <p class="group inner list-group-item-text">
+                                                    <strong>Encrypted</strong>, Size: 15 kByte, Date: 1/25/2017 00:12</p>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <a class="btn btn-success pull-right" href="#">Download</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">Copyright <a href="#" class="navbar-link">A.</a></p>
+        </div>
+    </footer>
+
+
+
+</body>
+
 </html>
