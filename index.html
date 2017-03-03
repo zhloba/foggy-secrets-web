@@ -4,9 +4,14 @@
     <title>Hello Angular 2</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Styles-->
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
-
+    <!--jQuery-->
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <!--Bootstrap 3-->
+    <script href="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!--Angular 2-->
     <script src="node_modules/core-js/client/shim.min.js"></script>
     <script src="node_modules/zone.js/dist/zone.js"></script>
     <script src="node_modules/reflect-metadata/Reflect.js"></script>
@@ -27,7 +32,7 @@
 
         <div class="row">
             <div class="col-md-6">
-                <my-app class="hide">Загрузка...</my-app>
+                <app class="hide">Загрузка...</app>
 
                 <form class="form-horizontal">
                     <div class="form-group">
@@ -41,76 +46,114 @@
                     </div>
                 </form>
                 <div class="upload-panel">
-
+                    Drop files here
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="panel panel-default">
+                <!--<div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Files</h3>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body">-->
 
-                        <div id="files" class="row list-group">
-                            <div class="item  col-xs-12">
-                                <div class="thumbnail">
-                                    <div class="caption">
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <h4 class="group inner list-group-item-heading">
-                                                    File name 1</h4>
-                                                <p class="group inner list-group-item-text">
-                                                    <strong>Encrypted</strong>, Size: 15 kByte, Date: 1/25/2017 00:12</p>
-                                            </div>
-                                            <div class="col-xs-4">
-                                                <a class="btn btn-success pull-right" href="#">Download</a>
-                                            </div>
+                <div id="files" class="row list-group">
+                    <div class="item  col-xs-12 ">
+                        <div class="thumbnail">
+
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                                    style="width: 40%">
+                                    <span class="sr-only">40% Complete (success)</span>
+                                </div>
+
+                                <div class="caption">
+                                    <div class="row">
+                                        <div class="col-xs-10">
+                                            <h4 class="group inner list-group-item-heading">
+                                                File name 1</h4>
+                                            <!--<p class="group inner list-group-item-text">-->
+
+                                            <!--<span class="label label-success disable">Decrypted</span>-->
+                                            <span class="label label-default">126 MByte</span>
+                                            <span class="label label-default">1/25/2017 00:12</span>
+                                            <!--</p>-->
                                         </div>
+                                        <div class="col-xs-2">
+                                            <!--<a class="btn btn-success pull-right" href="#">Download</a>-->
+                                            <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        </div>
+                                    </div>
+                                    <!--<div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                                                        style="width: 40%">
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>-->
+                                </div>
+
+
+
+                            </div>
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="files" class="row list-group">
+                    <div class="item  col-xs-12">
+                        <div class="thumbnail">
+                            <div class="caption">
+                                <div class="row">
+                                    <div class="col-xs-10">
+                                        <h4 class="group inner list-group-item-heading">
+                                            <a href="#">File name 2</a>
+                                        </h4>
+                                        <p class="group inner list-group-item-text">
+                                            <span class="label label-success">Decrypted</span>
+                                            <span class="label label-default">15 kByte</span>
+                                            <span class="label label-default">1/25/2017 00:12</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <!--<a class="btn btn-success pull-right" href="#">Download</a>-->
+                                        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div id="files" class="row list-group">
-                            <div class="item  col-xs-12">
-                                <div class="thumbnail">
-                                    <div class="caption">
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <h4 class="group inner list-group-item-heading">
-                                                    File name 1</h4>
-                                                <p class="group inner list-group-item-text">
-                                                    <strong>Encrypted</strong>, Size: 15 kByte, Date: 1/25/2017 00:12</p>
-                                            </div>
-                                            <div class="col-xs-4">
-                                                <a class="btn btn-success pull-right" href="#">Download</a>
-                                            </div>
-                                        </div>
+                <div id="files" class="row list-group">
+                    <div class="item  col-xs-12">
+                        <div class="thumbnail">
+                            <div class="caption">
+                                <div class="row">
+                                    <div class="col-xs-10">
+                                        <h4 class="group inner list-group-item-heading">
+                                            <a href="#">DCS0001.jpg</a>
+                                        </h4>
+                                        <p class="group inner list-group-item-text">
+                                            <span class="label label-danger">Encrypted</span>
+                                            <span class="label label-default">15 kByte</span>
+                                            <span class="label label-default">1/25/2017 00:12</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <!--<a class="btn btn-success pull-right" href="#">Download</a>-->
+                                        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div id="files" class="row list-group">
-                            <div class="item  col-xs-12">
-                                <div class="thumbnail">
-                                    <div class="caption">
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <h4 class="group inner list-group-item-heading">
-                                                    File name 1</h4>
-                                                <p class="group inner list-group-item-text">
-                                                    <strong>Encrypted</strong>, Size: 15 kByte, Date: 1/25/2017 00:12</p>
-                                            </div>
-                                            <div class="col-xs-4">
-                                                <a class="btn btn-success pull-right" href="#">Download</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>

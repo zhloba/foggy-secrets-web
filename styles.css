@@ -17,9 +17,11 @@ body {
 
 .upload-panel{
     /*border-style: dashed;*/
-    border: 2px dashed grey;
-    min-height: 300px;
+    border: 2px dashed grey;   
     margin-bottom: 30px;
+    padding: 100px;
+    text-align: center;
+    color: grey;
 }
 
 .footer > .container {
@@ -41,4 +43,17 @@ body {
 
 #files .thumbnail {
     margin-bottom: 8px;
+}
+
+#files .progress {
+    margin:0;
+    position: relative;
+    height: 60px;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+#files .progress > .caption {    
+    position: absolute; 
+    width: 100%;   
 }

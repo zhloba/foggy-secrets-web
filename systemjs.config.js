@@ -20,9 +20,6 @@
       // остальные пакеты
       'rxjs':                      'npm:rxjs',
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
-      // ng2-bootstrap
-      'moment': 'node_modules/moment',
-      'ng2-bootstrap': 'node_modules/ng2-bootstrap',
     },
     // пакеты, которые указывают загрузчику System, как загружать файлы без имени и расширения
     packages: {
@@ -32,10 +29,7 @@
       },
       rxjs: {
         defaultExtension: 'js'
-      },
-      // ng2-bootstrap
-     'ng2-bootstrap': { format: 'cjs', main: 'bundles/ng2-bootstrap.umd.js', defaultExtension: 'js' },
-     'moment': { main: 'moment.js', defaultExtension: 'js' }
+      }
     }
   });
 })(this);
