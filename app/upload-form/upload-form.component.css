@@ -1,0 +1,8 @@
+.upload-panel{
+    /*border-style: dashed;*/
+    border: 2px dashed grey;   
+    margin-bottom: 30px;
+    padding: 100px;
+    text-align: center;
+    color: grey;
+}

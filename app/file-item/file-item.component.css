@@ -1,0 +1,20 @@
+#files {
+    margin-bottom: 0;
+}
+
+#files .thumbnail {
+    margin-bottom: 8px;
+}
+
+#files .progress {
+    margin:0;
+    position: relative;
+    height: 60px;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+#files .progress > .caption {    
+    position: absolute; 
+    width: 100%;   
+}

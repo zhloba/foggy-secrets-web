@@ -15,15 +15,6 @@ body {
   background-color: #f5f5f5;
 }
 
-.upload-panel{
-    /*border-style: dashed;*/
-    border: 2px dashed grey;   
-    margin-bottom: 30px;
-    padding: 100px;
-    text-align: center;
-    color: grey;
-}
-
 .footer > .container {
   padding-right: 15px;
   padding-left: 15px;
@@ -35,25 +26,4 @@ body {
 
 .footer > .container > p {
     float: right;
-}
-
-#files {
-    margin-bottom: 0;
-}
-
-#files .thumbnail {
-    margin-bottom: 8px;
-}
-
-#files .progress {
-    margin:0;
-    position: relative;
-    height: 60px;
-    box-shadow: none;
-    background-color: transparent;
-}
-
-#files .progress > .caption {    
-    position: absolute; 
-    width: 100%;   
 }
