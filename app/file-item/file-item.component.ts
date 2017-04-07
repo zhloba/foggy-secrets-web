@@ -10,5 +10,5 @@ import { FileStatus } from '../shared/file-status'
 })
 export class FileItemComponent {
     fileStatus = FileStatus;
-    fileInfo: FileInfo = new FileInfo('test', FileStatus.Encrypted, 6543, new Date(), 70);
+    fileInfo: FileInfo = new FileInfo('test', FileStatus.Decrypted, 6543, new Date(), 70);
 }

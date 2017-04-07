@@ -3,12 +3,14 @@
         <div class="thumbnail">
 
             <div class="progress">
-                <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" 
-                    [attr.aria-valuenow]="fileInfo.progress ? fileInfo.progress : 0" aria-valuenow="40" aria-valuemin="0"
-                    aria-valuemax="100" 
+                <div class="progress-bar progress-bar-success progress-bar-striped" 
+                    role="progressbar" 
+                    aria-valuemin="0" 
+                    aria-valuemax="100"                     
+                    [attr.aria-valuenow]="fileInfo.progress ? fileInfo.progress : 0"  
                     [style.width.%]="fileInfo.progress ? fileInfo.progress : 0" 
                     [ngClass]="{ 'hide': fileInfo.status == fileStatus.Encrypted || fileInfo.status == fileStatus.Decrypted }">
-                    <span class="sr-only">40% Complete (success)</span>
+                    <span class="sr-only">{{ fileInfo.progress ? fileInfo.progress : 0 }}% Complete (success)</span>
                 </div>
 
                 <div class="caption">
