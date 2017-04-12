@@ -10,4 +10,10 @@ import { files } from '../shared/data'
 })
 export class FilesListComponent {
     files: FileInfo[] = files;
+
+    delete(file: FileInfo) {        
+        let index = this.files.indexOf(file);
+        if (index > -1)
+            this.files.splice(index, 1);
+    }
 }

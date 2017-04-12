@@ -1,6 +1,6 @@
 
 
-<file-item *ngFor="let file of files"></file-item>
+<file-item *ngFor="let file of files" [item]="file" (delete)="delete($event)"></file-item>
 
 <!--<div id="files" class="row list-group">
     <div class="item  col-xs-12">

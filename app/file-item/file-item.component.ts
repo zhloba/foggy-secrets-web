@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, Input, Output, EventEmitter } from '@angular/core'
 import { FileInfo } from '../shared/file-info'
 import { FileStatus } from '../shared/file-status'
 
@@ -10,5 +10,10 @@ import { FileStatus } from '../shared/file-status'
 })
 export class FileItemComponent {
     fileStatus = FileStatus;
-    fileInfo: FileInfo = new FileInfo('test', FileStatus.Decrypted, 6543, new Date(), 70);
+    @Input() item: FileInfo; // = new FileInfo('test', FileStatus.Decrypted, 6543, new Date(), 70);
+    @Output() delete = new EventEmitter();
+
+    onDelete() {
+        this.delete.emit(this.item);
+    }
 }
