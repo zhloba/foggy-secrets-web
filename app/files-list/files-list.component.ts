@@ -1,6 +1,7 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { FileInfo } from '../shared/file-info'
-import { files } from '../shared/data'
+
+import { FileService } from '../shared/file.service'
 
 @Component({
     moduleId: module.id,
@@ -8,12 +9,18 @@ import { files } from '../shared/data'
     templateUrl: 'files-list.component.html',
     styleUrls: ['files-list.component.css']
 })
-export class FilesListComponent {
-    files: FileInfo[] = files;
+export class FilesListComponent implements OnInit {
+    files: FileInfo[];
+
+    constructor(private fileService: FileService) {
+        this.files = [];
+    }
+
+    ngOnInit() {
+        this.files = this.fileService.getFiles();
+    }
 
     delete(file: FileInfo) {        
-        let index = this.files.indexOf(file);
-        if (index > -1)
-            this.files.splice(index, 1);
+        this.fileService.deleteFile(file);
     }
 }

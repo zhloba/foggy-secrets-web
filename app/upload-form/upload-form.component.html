@@ -1,14 +1,16 @@
 <form class="form-horizontal">
-    <div class="form-group">
+    <div class="form-group" [ngClass]="{ 'has-error': (inputPassword.touched || inputPassword.dirty) && !inputPassword.valid }">
         <label class="sr-only" for="inputPassword">Password</label>
         <div class="col-sm-12">
             <div class="input-group">
                 <div class="input-group-addon">Password</div>
-                <input type="password" class="form-control" id="inputPassword" placeholder="Secret phrase">
+                <input type="password" class="form-control" id="inputPassword" placeholder="Secret phrase" required [(ngModel)]="password" 
+                name ="inputPassword" #inputPassword= "ngModel">
             </div>
         </div>
     </div>
+
+    <div dnd-upload (filesAddEmiter)="onAdd($event)" class="upload-panel">
+        Drop files here
+    </div>
 </form>
-<div class="upload-panel">
-    Drop files here
-</div>
