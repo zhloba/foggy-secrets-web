@@ -1,8 +1,16 @@
 import { FileInfo } from '../shared/file-info'
 import { FileStatus } from '../shared/file-status'
 import { files } from '../shared/data'
+import { CryptoService } from '../shared/crypto.service'
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class FileService {
+
+    constructor(private cryptoService: CryptoService) {
+
+    }
+
     files: FileInfo[] = files;
 
     getFiles(): FileInfo[] {
@@ -11,13 +19,19 @@ export class FileService {
 
     addFile(filesList: File[]) {
         for (var i = 0; i < filesList.length; i++) {
-            this.files.push(new FileInfo(
+            
+            let file: FileInfo = new FileInfo(
                 filesList[i].name,
                 FileStatus.Decrypted,
                 filesList[i].size,
                 filesList[i].lastModifiedDate,
-                0
-            ));
+                0,
+                filesList[i]
+            );
+
+            this.files.push(file);
+
+            this.cryptoService.doSomething();
         }
     }
 

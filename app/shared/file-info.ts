@@ -5,7 +5,8 @@ export interface IFileInfo {
     status: FileStatus;
     size: number;
     date: Date;
-    progress: number; 
+    progress: number;
+    file: File; 
 }
 
 export class FileInfo implements IFileInfo {
@@ -14,5 +15,6 @@ export class FileInfo implements IFileInfo {
         public status: FileStatus,
         public size: number,
         public date: Date,
-        public progress: number) {}
+        public progress: number,
+        public file: File) {}
 }

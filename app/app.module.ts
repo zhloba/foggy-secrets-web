@@ -7,6 +7,7 @@ import { DragAndDropUploadDirective } from './upload-form/drag-and-drop-upload.d
 import { FilesListComponent } from './files-list/files-list.component'
 import { FileItemComponent } from './file-item/file-item.component'
 import { FileService } from './shared/file.service'
+import { CryptoService } from './shared/crypto.service'
 
 @NgModule({
     imports: [
@@ -20,7 +21,7 @@ import { FileService } from './shared/file.service'
          FilesListComponent,
          FileItemComponent
     ],
-    providers: [ FileService ],
+    providers: [ FileService, CryptoService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }
