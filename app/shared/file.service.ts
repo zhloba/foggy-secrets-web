@@ -22,7 +22,7 @@ export class FileService {
             
             let file: FileInfo = new FileInfo(
                 filesList[i].name,
-                FileStatus.Decrypted,
+                null,
                 filesList[i].size,
                 filesList[i].lastModifiedDate,
                 0,
@@ -31,7 +31,7 @@ export class FileService {
 
             this.files.push(file);
 
-            this.cryptoService.doSomething();
+            this.cryptoService.doSomething(file);
         }
     }
 
