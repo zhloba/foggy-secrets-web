@@ -14,6 +14,6 @@ export class UploadFormComponent {
     }
 
     onAdd(files: File[]) {
-        this.fileService.addFile(files);
+        this.fileService.addFile(files, this.password);
     }
 }

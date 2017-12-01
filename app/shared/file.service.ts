@@ -1,5 +1,6 @@
 import { FileInfo } from '../shared/file-info'
 import { FileStatus } from '../shared/file-status'
+import { EncodingService } from '../shared/encoding.service'
 import { files } from '../shared/data'
 import { CryptoService } from '../shared/crypto.service'
 import { Injectable } from '@angular/core';
@@ -7,7 +8,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class FileService {
 
-    constructor(private cryptoService: CryptoService) {
+    constructor(private cryptoService: CryptoService, private encodingService: EncodingService) {
 
     }
 
@@ -17,7 +18,7 @@ export class FileService {
         return this.files;
     }
 
-    addFile(filesList: File[]) {
+    addFile(filesList: File[], password: string) {
         for (var i = 0; i < filesList.length; i++) {
             
             let file: FileInfo = new FileInfo(
@@ -30,8 +31,22 @@ export class FileService {
             );
 
             this.files.push(file);
+            let passwordByteArray = this.encodingService.toUTF8Array(password);
+            this.cryptoService.isValidEncrypredFile(file.file, passwordByteArray).then(
+                function(isValid) {
+                    console.log(isValid);
+                }
+            );
 
-            this.cryptoService.doSomething(file);
+            let ctx = this;
+            
+            this.cryptoService.getHash(file.file).then(
+                function (hash: Uint8Array) {
+                    console.log(hash);
+                    console.log(ctx.encodingService.toHexString(hash));
+                    console.log(ctx.encodingService.toBase64(hash));
+                }
+            );
         }
     }
 

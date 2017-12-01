@@ -8,6 +8,7 @@ import { FilesListComponent } from './files-list/files-list.component'
 import { FileItemComponent } from './file-item/file-item.component'
 import { FileService } from './shared/file.service'
 import { CryptoService } from './shared/crypto.service'
+import { EncodingService } from './shared/encoding.service'
 
 @NgModule({
     imports: [
@@ -21,7 +22,7 @@ import { CryptoService } from './shared/crypto.service'
          FilesListComponent,
          FileItemComponent
     ],
-    providers: [ FileService, CryptoService ],
+    providers: [ FileService, CryptoService, EncodingService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }
