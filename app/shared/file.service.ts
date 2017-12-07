@@ -23,7 +23,7 @@ export class FileService {
             
             let file: FileInfo = new FileInfo(
                 filesList[i].name,
-                null,
+                FileStatus.Encrypted,
                 filesList[i].size,
                 filesList[i].lastModifiedDate,
                 0,
@@ -32,6 +32,7 @@ export class FileService {
 
             this.files.push(file);
             let passwordByteArray = this.encodingService.toUTF8Array(password);
+
             this.cryptoService.isValidEncrypredFile(file.file, passwordByteArray).then(
                 function(isValid) {
                     console.log(isValid);
@@ -47,6 +48,13 @@ export class FileService {
                     console.log(ctx.encodingService.toBase64(hash));
                 }
             );
+
+            this.cryptoService.encrypt(file.file, passwordByteArray)
+            .then(function (data){    
+                
+                file.file = new File([data], file.file.name, { type: file.file.type  });
+                console.log(URL.createObjectURL(file.file));
+            });
         }
     }
 

@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-xs-10">
                             <h4 class="group inner list-group-item-heading" *ngIf="item.status == fileStatus.Encrypted || item.status == fileStatus.Decrypted">
-                                <a href="#">{{ item.name }}</a>
+                                <a href="#" (click)="onSave()">{{ item.name }}</a>
                             </h4>
                             <h4 class="group inner list-group-item-heading" *ngIf="item.status == fileStatus.Encrypting || item.status == fileStatus.Decrypting">
                                 {{ item.name }}

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
 import { FileInfo } from '../shared/file-info'
 import { FileStatus } from '../shared/file-status'
+import 'file-saver';
 
 @Component({
     moduleId: module.id,
@@ -15,5 +16,9 @@ export class FileItemComponent {
 
     onDelete() {
         this.delete.emit(this.item);
+    }
+
+    onSave() {
+        saveAs(this.item.file, this.item.name);
     }
 }
