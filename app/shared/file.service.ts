@@ -33,28 +33,39 @@ export class FileService {
             this.files.push(file);
             let passwordByteArray = this.encodingService.toUTF8Array(password);
 
-            this.cryptoService.isValidEncrypredFile(file.file, passwordByteArray).then(
+            let ctx = this;
+            // ctx.cryptoService.getHash(file.file).then(
+            //     function (hash: Uint8Array) {
+            //         console.log(hash);
+            //         console.log(ctx.encodingService.toHexString(hash));
+            //         console.log(ctx.encodingService.toBase64(hash));
+            //     }
+            // );
+
+            ctx.cryptoService.isValidEncrypredFile(file.file, passwordByteArray).then(
                 function(isValid) {
                     console.log(isValid);
+                    file.status = isValid ? FileStatus.Decrypting : FileStatus.Encrypting;
+                    return isValid;
+                }
+            ).then(
+                function(isEncrypted) {
+                    if (isEncrypted) {
+                        return ctx.cryptoService.decrypt(file.file, passwordByteArray);
+                    }
+                    else {
+                        return ctx.cryptoService.encrypt(file.file, passwordByteArray);
+                    }
+                }
+            ).then(
+                function (data) {
+                    file.status = file.status == FileStatus.Encrypting ? 
+                                    FileStatus.Encrypted : file.status == FileStatus.Decrypting ?
+                                     FileStatus.Decrypted : FileStatus.Decrypted;
+                    file.file = new File([data], file.file.name, { type: file.file.type  });
+                    console.log(URL.createObjectURL(file.file));
                 }
             );
-
-            let ctx = this;
-            
-            this.cryptoService.getHash(file.file).then(
-                function (hash: Uint8Array) {
-                    console.log(hash);
-                    console.log(ctx.encodingService.toHexString(hash));
-                    console.log(ctx.encodingService.toBase64(hash));
-                }
-            );
-
-            this.cryptoService.encrypt(file.file, passwordByteArray)
-            .then(function (data){    
-                
-                file.file = new File([data], file.file.name, { type: file.file.type  });
-                console.log(URL.createObjectURL(file.file));
-            });
         }
     }
 

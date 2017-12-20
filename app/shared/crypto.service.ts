@@ -163,13 +163,13 @@ export class CryptoService {
                             resolve(
                                 (
                                     window.crypto.subtle.encrypt({
-                                        name: "AES-CBC",
-                                        //Don't re-use initialization vectors!
-                                        //Always generate a new iv every time your encrypt!
-                                        iv: results[1],
-                                    },
-                                    results[0], //from generateKey or importKey above
-                                    reader.result //ArrayBuffer of data you want to encrypt
+                                            name: "AES-CBC",
+                                            //Don't re-use initialization vectors!
+                                            //Always generate a new iv every time your encrypt!
+                                            iv: results[1]
+                                        },
+                                        results[0], //from generateKey or importKey above
+                                        reader.result //ArrayBuffer of data you want to encrypt
                                     )
                                     .then(function(encrypted){
                                         //returns an ArrayBuffer containing the encrypted data
@@ -200,8 +200,39 @@ export class CryptoService {
         });
     }
 
-    decrypt(file: File) {
+    decrypt(file: File, password: Uint8Array): Promise<ArrayBuffer> {
 
+        let self = this;
+        let reader = new FileReader(); 
+
+        return new Promise<ArrayBuffer>(function (resolve, reject) {
+            reader.onload = function () {
+                let salt = reader.result.slice(40, 56);
+                let keyPromise = self.deriveKey(password, salt, 100, 'AES-CBC', 256);
+                let ivPromise = self.deriveBits(password, salt, 100, 128);
+
+                return Promise.all([keyPromise, ivPromise]).then(
+                    function (results) { 
+                        let res = (window.crypto.subtle.decrypt({
+                                name: "AES-CBC",
+                                //Don't re-use initialization vectors!
+                                //Always generate a new iv every time your encrypt!
+                                iv: results[1]
+                            },
+                            results[0], //from generateKey or importKey above
+                            reader.result.slice(56) //ArrayBuffer of data you want to decrypt
+                        ) as Promise<ArrayBuffer>).catch(
+                            function(err){
+                                console.error(err);
+                            }
+                        );
+                        resolve(res);
+                    }
+                );
+            };
+
+            reader.readAsArrayBuffer(file);
+        });
     }
 
     doSomething(file: FileInfo, password: Uint8Array) {
