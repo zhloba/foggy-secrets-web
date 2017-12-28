@@ -1,6 +1,9 @@
-<div class="col-md-6">
+<div class="col-md-6" [ngClass]="{ 'hide': !isBrowserSupported }">
     <upload-form></upload-form>
 </div>
-<div class="col-md-6">
+<div class="col-md-6" [ngClass]="{ 'hide': !isBrowserSupported }">
     <files-list></files-list>
+</div>
+<div class="alert alert-danger" role="alert" [ngClass]="{ 'hide': isBrowserSupported }">
+    Your browser is not supported!
 </div>

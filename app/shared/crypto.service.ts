@@ -2,13 +2,135 @@ import { FileInfo } from '../shared/file-info'
 import { FileStatus } from '../shared/file-status'
 import { Observable } from 'rxjs/Rx'
 import { Injectable } from '@angular/core';
-
-//import * as workerPath from "file-loader?name=[name].js!./test.worker";
+import * as _ from 'lodash';
 
 @Injectable()
 export class CryptoService {
 
     constructor() {
+    }
+
+    isBrowserSupported(): Promise<boolean> {
+        let cryptoMethods = {
+            encrypt: null,
+            decrypt: null,
+            generateKey: null,
+            hmacSign: null,
+            hmacVerify: null,
+            hmacImportKey: null,
+            sha1: null,
+            deriveKey: null,
+            deriveBits: null
+        };
+
+        //encrypt
+        cryptoMethods.encrypt = (window.crypto.subtle.generateKey({ name: "AES-CBC", length: 256 }, false, ["encrypt"])
+        .then(function(key){
+            return window.crypto.subtle.encrypt({
+                name: "AES-CBC",
+                iv: window.crypto.getRandomValues(new Uint8Array(16)),
+            }, key, new Uint8Array([1, 2, 3, 4]));
+        })
+        .then(function() { return true; }) as Promise<boolean>)
+        .catch(function() { return false; });
+
+        //decrypt
+        cryptoMethods.decrypt = (window.crypto.subtle.generateKey({ name: "AES-CBC", length: 256 }, false, ["encrypt", "decrypt"])
+        .then(function(key){
+            var iv = window.crypto.getRandomValues(new Uint8Array(16));
+            return (window.crypto.subtle.encrypt({
+                name: "AES-CBC",
+                iv: iv,
+            }, key, new Uint8Array([1, 2, 3, 4]))
+            .then(function(encrypted){
+                return window.crypto.subtle.decrypt({
+                    name: "AES-CBC",
+                    iv: iv,
+                }, key, encrypted);
+            })
+            .then(function() { return true; }) as Promise<boolean>)
+            .catch(function() { return false; });
+        }) as Promise<boolean>)
+        .catch(function() { return false; });
+
+        //256 bits
+        cryptoMethods.generateKey = (window.crypto.subtle.generateKey({
+            name: "AES-CBC",
+            length: 256,
+        }, false, ["encrypt", "decrypt"])
+        .then(function() { return true; }) as Promise<boolean>)
+        .catch(function() { return false; });
+
+        //digest
+        cryptoMethods.sha1 = (window.crypto.subtle.digest({name: "SHA-1"}, new Uint8Array([1, 2, 3, 4]))
+        .then(function() { return true; }) as Promise<boolean>)
+        .catch(function() { return false; });
+
+        //deriveKey
+        var password = window.crypto.getRandomValues(new Uint8Array(16));
+        cryptoMethods.deriveKey = (window.crypto.subtle.importKey("raw", password, {name: "PBKDF2"}, false, ["deriveBits", "deriveKey"])
+        .then(function(key){
+            //sha-1
+            return (window.crypto.subtle.deriveKey({
+                name: "PBKDF2",
+                salt: window.crypto.getRandomValues(new Uint8Array(16)),
+                iterations: 1000,
+                hash: {name: "SHA-1"},
+            }, key, { name: "AES-CBC", length: 256 }, false, ["encrypt", "decrypt"])
+            .then(function() { return true; }) as Promise<boolean>)
+            .catch(function() { return false; });
+        }) as Promise<boolean>)
+        .catch(function() { return false; });
+
+        //deriveBits
+        var password = window.crypto.getRandomValues(new Uint8Array(16));
+        cryptoMethods.deriveBits = (window.crypto.subtle.importKey("raw", password, {name: "PBKDF2"}, false, ["deriveBits", "deriveKey"])
+        .then(function(key){
+            //sha-1
+            return (window.crypto.subtle.deriveBits({
+                "name": "PBKDF2",
+                salt: window.crypto.getRandomValues(new Uint8Array(16)),
+                iterations: 1000,
+                hash: {name: "SHA-1"},
+            }, key, 128)
+            .then(function() { return true; }) as Promise<boolean>)
+            .catch(function() { return false; });
+        }) as Promise<boolean>)
+        .catch(function() { cryptoMethods.deriveBits = false; });
+
+        //HMAC sign
+        cryptoMethods.hmacSign = (window.crypto.subtle.generateKey({ name: "HMAC", hash: {name: "SHA-1"}}, false, ["sign"])
+        .then(function(key){
+            return window.crypto.subtle.sign({ name: "HMAC", hash: {name: "SHA-1"}}, key, new Uint8Array([1, 2, 3, 4]));
+        })
+        .then(function() { return true; }) as Promise<boolean>)
+        .catch(function() { return false; });
+
+        //HMAC verify
+        cryptoMethods.hmacVerify = (window.crypto.subtle.generateKey({ name: "HMAC", hash: {name: "SHA-1"}}, false, ["sign", "verify"])
+        .then(function(key){
+            return (window.crypto.subtle.sign({ name: "HMAC", hash: {name: "SHA-1"}}, key, new Uint8Array([1, 2, 3, 4]))
+            .then(function(sig){
+                return window.crypto.subtle.verify({ name: "HMAC", hash: {name: "SHA-1"}}, key, sig, new Uint8Array([1, 2, 3, 4]));
+            })
+            .then(function() { return true; }) as Promise<boolean>)
+            .catch(function() { return false; });
+        }) as Promise<boolean>)
+        .catch(function() { cryptoMethods.hmacVerify = false; });
+
+        //importKey
+        //raw
+        cryptoMethods.hmacImportKey = (window.crypto.subtle.importKey("raw", new Uint8Array([
+            122,94,39,230,46,23,151,80,131,230,3,101,80,234,143,9,251,
+            152,229,228,89,222,31,135,214,104,55,68,67,59,5,51
+        ]), { name: "HMAC", hash: {name: "SHA-1"}}, false, ["sign", "verify"])
+        .then(function() { return true; }) as Promise<boolean>)
+        .catch(function() { return false; });
+        
+        return Promise.all<boolean>(_.valuesIn(cryptoMethods))
+        .then(function (values: boolean[]) {
+            return _.every(values, function(value) { return value; });
+        });
     }
 
     getHash(file: File): Promise<Uint8Array> {
