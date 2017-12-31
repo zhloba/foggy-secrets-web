@@ -23,114 +23,121 @@ export class CryptoService {
             deriveBits: null
         };
 
-        //encrypt
-        cryptoMethods.encrypt = (window.crypto.subtle.generateKey({ name: "AES-CBC", length: 256 }, false, ["encrypt"])
-        .then(function(key){
-            return window.crypto.subtle.encrypt({
+        try {
+            //encrypt
+            cryptoMethods.encrypt = (window.crypto.subtle.generateKey({ name: "AES-CBC", length: 256 }, false, ["encrypt"])
+                .then(function (key) {
+                    return window.crypto.subtle.encrypt({
+                        name: "AES-CBC",
+                        iv: window.crypto.getRandomValues(new Uint8Array(16)),
+                    }, key, new Uint8Array([1, 2, 3, 4]));
+                })
+                .then(function () { return true; }) as Promise<boolean>)
+                .catch(function () { return false; });
+
+            //decrypt
+            cryptoMethods.decrypt = (window.crypto.subtle.generateKey({ name: "AES-CBC", length: 256 }, false, ["encrypt", "decrypt"])
+                .then(function (key) {
+                    var iv = window.crypto.getRandomValues(new Uint8Array(16));
+                    return (window.crypto.subtle.encrypt({
+                        name: "AES-CBC",
+                        iv: iv,
+                    }, key, new Uint8Array([1, 2, 3, 4]))
+                        .then(function (encrypted) {
+                            return window.crypto.subtle.decrypt({
+                                name: "AES-CBC",
+                                iv: iv,
+                            }, key, encrypted);
+                        })
+                        .then(function () { return true; }) as Promise<boolean>)
+                        .catch(function () { return false; });
+                }) as Promise<boolean>)
+                .catch(function () { return false; });
+
+            //256 bits
+            cryptoMethods.generateKey = (window.crypto.subtle.generateKey({
                 name: "AES-CBC",
-                iv: window.crypto.getRandomValues(new Uint8Array(16)),
-            }, key, new Uint8Array([1, 2, 3, 4]));
-        })
-        .then(function() { return true; }) as Promise<boolean>)
-        .catch(function() { return false; });
+                length: 256,
+            }, false, ["encrypt", "decrypt"])
+                .then(function () { return true; }) as Promise<boolean>)
+                .catch(function () { return false; });
 
-        //decrypt
-        cryptoMethods.decrypt = (window.crypto.subtle.generateKey({ name: "AES-CBC", length: 256 }, false, ["encrypt", "decrypt"])
-        .then(function(key){
-            var iv = window.crypto.getRandomValues(new Uint8Array(16));
-            return (window.crypto.subtle.encrypt({
-                name: "AES-CBC",
-                iv: iv,
-            }, key, new Uint8Array([1, 2, 3, 4]))
-            .then(function(encrypted){
-                return window.crypto.subtle.decrypt({
-                    name: "AES-CBC",
-                    iv: iv,
-                }, key, encrypted);
-            })
-            .then(function() { return true; }) as Promise<boolean>)
-            .catch(function() { return false; });
-        }) as Promise<boolean>)
-        .catch(function() { return false; });
+            //digest
+            cryptoMethods.sha1 = (window.crypto.subtle.digest({ name: "SHA-1" }, new Uint8Array([1, 2, 3, 4]))
+                .then(function () { return true; }) as Promise<boolean>)
+                .catch(function () { return false; });
 
-        //256 bits
-        cryptoMethods.generateKey = (window.crypto.subtle.generateKey({
-            name: "AES-CBC",
-            length: 256,
-        }, false, ["encrypt", "decrypt"])
-        .then(function() { return true; }) as Promise<boolean>)
-        .catch(function() { return false; });
+            //deriveKey
+            var password = window.crypto.getRandomValues(new Uint8Array(16));
+            cryptoMethods.deriveKey = (window.crypto.subtle.importKey("raw", password, { name: "PBKDF2" }, false, ["deriveBits", "deriveKey"])
+                .then(function (key) {
+                    //sha-1
+                    return (window.crypto.subtle.deriveKey({
+                        name: "PBKDF2",
+                        salt: window.crypto.getRandomValues(new Uint8Array(16)),
+                        iterations: 1000,
+                        hash: { name: "SHA-1" },
+                    }, key, { name: "AES-CBC", length: 256 }, false, ["encrypt", "decrypt"])
+                        .then(function () { return true; }) as Promise<boolean>)
+                        .catch(function () { return false; });
+                }) as Promise<boolean>)
+                .catch(function () { return false; });
 
-        //digest
-        cryptoMethods.sha1 = (window.crypto.subtle.digest({name: "SHA-1"}, new Uint8Array([1, 2, 3, 4]))
-        .then(function() { return true; }) as Promise<boolean>)
-        .catch(function() { return false; });
+            //deriveBits
+            var password = window.crypto.getRandomValues(new Uint8Array(16));
+            cryptoMethods.deriveBits = (window.crypto.subtle.importKey("raw", password, { name: "PBKDF2" }, false, ["deriveBits", "deriveKey"])
+                .then(function (key) {
+                    //sha-1
+                    return (window.crypto.subtle.deriveBits({
+                        "name": "PBKDF2",
+                        salt: window.crypto.getRandomValues(new Uint8Array(16)),
+                        iterations: 1000,
+                        hash: { name: "SHA-1" },
+                    }, key, 128)
+                        .then(function () { return true; }) as Promise<boolean>)
+                        .catch(function () { return false; });
+                }) as Promise<boolean>)
+                .catch(function () { cryptoMethods.deriveBits = false; });
 
-        //deriveKey
-        var password = window.crypto.getRandomValues(new Uint8Array(16));
-        cryptoMethods.deriveKey = (window.crypto.subtle.importKey("raw", password, {name: "PBKDF2"}, false, ["deriveBits", "deriveKey"])
-        .then(function(key){
-            //sha-1
-            return (window.crypto.subtle.deriveKey({
-                name: "PBKDF2",
-                salt: window.crypto.getRandomValues(new Uint8Array(16)),
-                iterations: 1000,
-                hash: {name: "SHA-1"},
-            }, key, { name: "AES-CBC", length: 256 }, false, ["encrypt", "decrypt"])
-            .then(function() { return true; }) as Promise<boolean>)
-            .catch(function() { return false; });
-        }) as Promise<boolean>)
-        .catch(function() { return false; });
+            //HMAC sign
+            cryptoMethods.hmacSign = (window.crypto.subtle.generateKey({ name: "HMAC", hash: { name: "SHA-1" } }, false, ["sign"])
+                .then(function (key) {
+                    return window.crypto.subtle.sign({ name: "HMAC", hash: { name: "SHA-1" } }, key, new Uint8Array([1, 2, 3, 4]));
+                })
+                .then(function () { return true; }) as Promise<boolean>)
+                .catch(function () { return false; });
 
-        //deriveBits
-        var password = window.crypto.getRandomValues(new Uint8Array(16));
-        cryptoMethods.deriveBits = (window.crypto.subtle.importKey("raw", password, {name: "PBKDF2"}, false, ["deriveBits", "deriveKey"])
-        .then(function(key){
-            //sha-1
-            return (window.crypto.subtle.deriveBits({
-                "name": "PBKDF2",
-                salt: window.crypto.getRandomValues(new Uint8Array(16)),
-                iterations: 1000,
-                hash: {name: "SHA-1"},
-            }, key, 128)
-            .then(function() { return true; }) as Promise<boolean>)
-            .catch(function() { return false; });
-        }) as Promise<boolean>)
-        .catch(function() { cryptoMethods.deriveBits = false; });
+            //HMAC verify
+            cryptoMethods.hmacVerify = (window.crypto.subtle.generateKey({ name: "HMAC", hash: { name: "SHA-1" } }, false, ["sign", "verify"])
+                .then(function (key) {
+                    return (window.crypto.subtle.sign({ name: "HMAC", hash: { name: "SHA-1" } }, key, new Uint8Array([1, 2, 3, 4]))
+                        .then(function (sig) {
+                            return window.crypto.subtle.verify({ name: "HMAC", hash: { name: "SHA-1" } }, key, sig, new Uint8Array([1, 2, 3, 4]));
+                        })
+                        .then(function () { return true; }) as Promise<boolean>)
+                        .catch(function () { return false; });
+                }) as Promise<boolean>)
+                .catch(function () { cryptoMethods.hmacVerify = false; });
 
-        //HMAC sign
-        cryptoMethods.hmacSign = (window.crypto.subtle.generateKey({ name: "HMAC", hash: {name: "SHA-1"}}, false, ["sign"])
-        .then(function(key){
-            return window.crypto.subtle.sign({ name: "HMAC", hash: {name: "SHA-1"}}, key, new Uint8Array([1, 2, 3, 4]));
-        })
-        .then(function() { return true; }) as Promise<boolean>)
-        .catch(function() { return false; });
+            //importKey
+            //raw
+            cryptoMethods.hmacImportKey = (window.crypto.subtle.importKey("raw", new Uint8Array([
+                122, 94, 39, 230, 46, 23, 151, 80, 131, 230, 3, 101, 80, 234, 143, 9, 251,
+                152, 229, 228, 89, 222, 31, 135, 214, 104, 55, 68, 67, 59, 5, 51
+            ]), { name: "HMAC", hash: { name: "SHA-1" } }, false, ["sign", "verify"])
+                .then(function () { return true; }) as Promise<boolean>)
+                .catch(function () { return false; });
 
-        //HMAC verify
-        cryptoMethods.hmacVerify = (window.crypto.subtle.generateKey({ name: "HMAC", hash: {name: "SHA-1"}}, false, ["sign", "verify"])
-        .then(function(key){
-            return (window.crypto.subtle.sign({ name: "HMAC", hash: {name: "SHA-1"}}, key, new Uint8Array([1, 2, 3, 4]))
-            .then(function(sig){
-                return window.crypto.subtle.verify({ name: "HMAC", hash: {name: "SHA-1"}}, key, sig, new Uint8Array([1, 2, 3, 4]));
-            })
-            .then(function() { return true; }) as Promise<boolean>)
-            .catch(function() { return false; });
-        }) as Promise<boolean>)
-        .catch(function() { cryptoMethods.hmacVerify = false; });
+        }
+        catch (ex) {
+            console.error('isBrowserSupported', ex.message);
+        }
 
-        //importKey
-        //raw
-        cryptoMethods.hmacImportKey = (window.crypto.subtle.importKey("raw", new Uint8Array([
-            122,94,39,230,46,23,151,80,131,230,3,101,80,234,143,9,251,
-            152,229,228,89,222,31,135,214,104,55,68,67,59,5,51
-        ]), { name: "HMAC", hash: {name: "SHA-1"}}, false, ["sign", "verify"])
-        .then(function() { return true; }) as Promise<boolean>)
-        .catch(function() { return false; });
-        
+
         return Promise.all<boolean>(_.valuesIn(cryptoMethods))
-        .then(function (values: boolean[]) {
-            return _.every(values, function(value) { return value; });
-        });
+            .then(function (values: boolean[]) {
+                return _.every(values, function (value) { return value; });
+            });
     }
 
     getHash(file: File): Promise<Uint8Array> {
@@ -149,13 +156,13 @@ export class CryptoService {
                     },
                     reader.result //The data you want to hash as an ArrayBuffer
                 )
-                .then(function (hash) {
-                    //returns the hash as an ArrayBuffer
-                    return new Uint8Array(hash);
-                }) as Promise<Uint8Array>)
-                .catch(function (err) {
-                    console.error(err);
-                }));
+                    .then(function (hash) {
+                        //returns the hash as an ArrayBuffer
+                        return new Uint8Array(hash);
+                    }) as Promise<Uint8Array>)
+                    .catch(function (err) {
+                        console.error(err);
+                    }));
             }
             reader.readAsArrayBuffer(file);
         });
@@ -173,30 +180,30 @@ export class CryptoService {
             false, //whether the key is extractable (i.e. can be used in exportKey)
             ["sign", "verify"] //can be any combination of "sign" and "verify"
         )
-        .then(function (key) {
+            .then(function (key) {
 
-            //returns the symmetric key
-            //console.log(key);
+                //returns the symmetric key
+                //console.log(key);
 
-            return (window.crypto.subtle.verify(
-                "HMAC",
-                key,
-                signature,
-                data
-            )
-                .then(function (isValid) {
-                    //returns a boolean on whether the signature is true or not                
-                    //console.log(isValid);               
-                    return isValid;
-                }) as Promise<boolean>)
-                .catch(function (err) {
-                    console.error(err);
-                });
+                return (window.crypto.subtle.verify(
+                    "HMAC",
+                    key,
+                    signature,
+                    data
+                )
+                    .then(function (isValid) {
+                        //returns a boolean on whether the signature is true or not                
+                        //console.log(isValid);               
+                        return isValid;
+                    }) as Promise<boolean>)
+                    .catch(function (err) {
+                        console.error(err);
+                    });
 
-        }) as Promise<boolean>)
-        .catch(function (err) {
-            console.error(err);
-        });
+            }) as Promise<boolean>)
+            .catch(function (err) {
+                console.error(err);
+            });
     }
 
     getHMAC(data: Uint8Array, password: Uint8Array): Promise<Uint8Array> {
@@ -213,27 +220,27 @@ export class CryptoService {
                 false, //whether the key is extractable (i.e. can be used in exportKey)
                 ["sign", "verify"] //can be any combination of "sign" and "verify"
             )
-            .then(function (key) {
+                .then(function (key) {
 
-                //returns the symmetric key
-                //console.log(key);
+                    //returns the symmetric key
+                    //console.log(key);
 
-                return (
-                    window.crypto.subtle.sign(
-                        "HMAC",
-                        key,
-                        data
-                    )
-                    .then(function (signature) {
-                        //returns an ArrayBuffer containing the signature
-                        let result = new Uint8Array(signature);
-                        //console.log(result);
-                        //console.log(this.toHexString(result));
-                        return result;
-                    }) as Promise<Uint8Array>)
-                    .catch(function (err) {
-                        console.error(err);
-                    });
+                    return (
+                        window.crypto.subtle.sign(
+                            "HMAC",
+                            key,
+                            data
+                        )
+                            .then(function (signature) {
+                                //returns an ArrayBuffer containing the signature
+                                let result = new Uint8Array(signature);
+                                //console.log(result);
+                                //console.log(this.toHexString(result));
+                                return result;
+                            }) as Promise<Uint8Array>)
+                        .catch(function (err) {
+                            console.error(err);
+                        });
                 }) as Promise<Uint8Array>)
 
             .catch(function (err) {
@@ -267,54 +274,54 @@ export class CryptoService {
 
         let self = this;
         let salt = new Uint8Array(16);
-        window.crypto.getRandomValues(salt);  
+        window.crypto.getRandomValues(salt);
 
-        return this.getHash(file).then(function (hash){
+        return this.getHash(file).then(function (hash) {
             return self.getHMAC(hash, password).then(function (hmac) {
-                
+
                 let keyPromise = self.deriveKey(password, salt, 100, 'AES-CBC', 256);
                 let ivPromise = self.deriveBits(password, salt, 100, 128);
 
                 return Promise.all([keyPromise, ivPromise]).then(function (results) {
 
-                    let reader = new FileReader(); 
+                    let reader = new FileReader();
 
                     return new Promise<ArrayBuffer>(function (resolve, reject) {
                         reader.onload = function () {
-            
+
                             resolve(
                                 (
                                     window.crypto.subtle.encrypt({
-                                            name: "AES-CBC",
-                                            //Don't re-use initialization vectors!
-                                            //Always generate a new iv every time your encrypt!
-                                            iv: results[1]
-                                        },
+                                        name: "AES-CBC",
+                                        //Don't re-use initialization vectors!
+                                        //Always generate a new iv every time your encrypt!
+                                        iv: results[1]
+                                    },
                                         results[0], //from generateKey or importKey above
                                         reader.result //ArrayBuffer of data you want to encrypt
                                     )
-                                    .then(function(encrypted){
-                                        //returns an ArrayBuffer containing the encrypted data
-                                        
-                                        let encArray = new Uint8Array(encrypted);
-                                        let result = new Uint8Array(encArray.length + + hash.length + hmac.length + salt.length);
-                                        result.set(hash);
-                                        result.set(hmac, hash.length);
-                                        result.set(salt, hash.length + hmac.length);
-                                        result.set(encArray, hash.length + hmac.length + salt.length);
+                                        .then(function (encrypted) {
+                                            //returns an ArrayBuffer containing the encrypted data
 
-                                        return result.buffer;
-            
-                                    }) as Promise<ArrayBuffer>
-                                )                        
-                                .catch(function(err){
-                                    console.error(err);
-                                })                 
+                                            let encArray = new Uint8Array(encrypted);
+                                            let result = new Uint8Array(encArray.length + + hash.length + hmac.length + salt.length);
+                                            result.set(hash);
+                                            result.set(hmac, hash.length);
+                                            result.set(salt, hash.length + hmac.length);
+                                            result.set(encArray, hash.length + hmac.length + salt.length);
+
+                                            return result.buffer;
+
+                                        }) as Promise<ArrayBuffer>
+                                )
+                                    .catch(function (err) {
+                                        console.error(err);
+                                    })
                             );
                         }
                         reader.readAsArrayBuffer(file);
                     });
-                    
+
                 });
             });
         }).catch(function (err) {
@@ -325,7 +332,7 @@ export class CryptoService {
     decrypt(file: File, password: Uint8Array): Promise<ArrayBuffer> {
 
         let self = this;
-        let reader = new FileReader(); 
+        let reader = new FileReader();
 
         return new Promise<ArrayBuffer>(function (resolve, reject) {
             reader.onload = function () {
@@ -334,20 +341,20 @@ export class CryptoService {
                 let ivPromise = self.deriveBits(password, salt, 100, 128);
 
                 return Promise.all([keyPromise, ivPromise]).then(
-                    function (results) { 
+                    function (results) {
                         let res = (window.crypto.subtle.decrypt({
-                                name: "AES-CBC",
-                                //Don't re-use initialization vectors!
-                                //Always generate a new iv every time your encrypt!
-                                iv: results[1]
-                            },
+                            name: "AES-CBC",
+                            //Don't re-use initialization vectors!
+                            //Always generate a new iv every time your encrypt!
+                            iv: results[1]
+                        },
                             results[0], //from generateKey or importKey above
                             reader.result.slice(56) //ArrayBuffer of data you want to decrypt
                         ) as Promise<ArrayBuffer>).catch(
-                            function(err){
+                            function (err) {
                                 console.error(err);
                             }
-                        );
+                            );
                         resolve(res);
                     }
                 );
@@ -415,36 +422,36 @@ export class CryptoService {
                 false, //whether the key is extractable (i.e. can be used in exportKey)
                 ["deriveKey", "deriveBits"] //can be any combination of "deriveKey" and "deriveBits"
             )
-            .then(function(key){
-                return (
-                    window.crypto.subtle.deriveKey(
-                        {
-                            "name": "PBKDF2",
-                            salt: salt,
-                            iterations: iterations,
-                            hash: {name: "SHA-1"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
-                        },
-                        key, //your key from generateKey or importKey
-                        { //the key type you want to create based on the derived bits
-                            name: "AES-CBC", //can be any AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH", or "HMAC")
-                            //the generateKey parameters for that type of algorithm
-                            length: length, //can be  128, 192, or 256
-                        },
-                        false, //whether the derived key is extractable (i.e. can be used in exportKey)
-                        ["encrypt", "decrypt"] //limited to the options in that algorithm's importKey
+                .then(function (key) {
+                    return (
+                        window.crypto.subtle.deriveKey(
+                            {
+                                "name": "PBKDF2",
+                                salt: salt,
+                                iterations: iterations,
+                                hash: { name: "SHA-1" }, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+                            },
+                            key, //your key from generateKey or importKey
+                            { //the key type you want to create based on the derived bits
+                                name: "AES-CBC", //can be any AES algorithm ("AES-CTR", "AES-CBC", "AES-CMAC", "AES-GCM", "AES-CFB", "AES-KW", "ECDH", "DH", or "HMAC")
+                                //the generateKey parameters for that type of algorithm
+                                length: length, //can be  128, 192, or 256
+                            },
+                            false, //whether the derived key is extractable (i.e. can be used in exportKey)
+                            ["encrypt", "decrypt"] //limited to the options in that algorithm's importKey
+                        )
+                            .then(function (key) {
+                                return key;
+                            }) as Promise<CryptoKey>
                     )
-                    .then(function(key){
-                        return key;    
-                    }) as Promise<CryptoKey>
-                )
-                .catch(function(err){
-                    console.error(err);
-                });
-            }) as Promise<CryptoKey>
+                        .catch(function (err) {
+                            console.error(err);
+                        });
+                }) as Promise<CryptoKey>
         )
-        .catch(function(err){
-            console.error(err);
-        });
+            .catch(function (err) {
+                console.error(err);
+            });
     }
 
     private deriveBits(password: Uint8Array, salt: Uint8Array, iterations: number, length: number): Promise<Uint8Array> {
@@ -458,29 +465,29 @@ export class CryptoService {
                 false, //whether the key is extractable (i.e. can be used in exportKey)
                 ["deriveKey", "deriveBits"] //can be any combination of "deriveKey" and "deriveBits"
             )
-            .then(function(key){                
-                return (
-                    window.crypto.subtle.deriveBits(
-                        {
-                            "name": "PBKDF2",
-                            salt: salt,
-                            iterations: iterations,
-                            hash: {name: "SHA-1"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
-                        },
-                        key, //your key from generateKey or importKey
-                        length                        
+                .then(function (key) {
+                    return (
+                        window.crypto.subtle.deriveBits(
+                            {
+                                "name": "PBKDF2",
+                                salt: salt,
+                                iterations: iterations,
+                                hash: { name: "SHA-1" }, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+                            },
+                            key, //your key from generateKey or importKey
+                            length
+                        )
+                            .then(function (key) {
+                                return key;
+                            }) as Promise<Uint8Array>
                     )
-                    .then(function(key){
-                        return key;    
-                    }) as Promise<Uint8Array>
-                )
-                .catch(function(err){
-                    console.error(err);
-                });
-            }) as Promise<Uint8Array>
+                        .catch(function (err) {
+                            console.error(err);
+                        });
+                }) as Promise<Uint8Array>
         )
-        .catch(function(err){
-            console.error(err);
-        });
+            .catch(function (err) {
+                console.error(err);
+            });
     }
 }
