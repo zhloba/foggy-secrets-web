@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
 import { FileInfo } from '../shared/file-info'
 import { FileStatus } from '../shared/file-status'
-import 'file-saver';
+import { saveAs } from 'file-saver/FileSaver';
 
 @Component({
     moduleId: module.id,
