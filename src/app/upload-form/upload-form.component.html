@@ -1,11 +1,11 @@
-<form class="form-horizontal">
-    <div class="form-group" [ngClass]="{ 'has-error': (inputPassword.touched || inputPassword.dirty) && !inputPassword.valid }">
-        <label class="sr-only" for="inputPassword">Password</label>
+<form class="form-horizontal" [formGroup]="form">
+    <div class="form-group" [ngClass]="displayFieldCss('password')">
+        <label class="sr-only" for="password">Password</label>
         <div class="col-sm-12">
             <div class="input-group">
                 <div class="input-group-addon">Password</div>
-                <input type="password" class="form-control" id="inputPassword" placeholder="Secret phrase" required [(ngModel)]="password" 
-                name ="inputPassword" #inputPassword= "ngModel">
+                <input type="password" class="form-control" id="inputPassword" placeholder="Secret phrase" required 
+                name ="password" formControlName="password">
             </div>
         </div>
     </div>

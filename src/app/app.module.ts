@@ -1,6 +1,6 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { AppComponent }   from './app.component';
 import { UploadFormComponent } from './upload-form/upload-form.component'
 import { DragAndDropUploadDirective } from './upload-form/drag-and-drop-upload.directive'
@@ -13,7 +13,8 @@ import { EncodingService } from './shared/encoding.service'
 @NgModule({
     imports: [
          BrowserModule,
-         FormsModule 
+         FormsModule,
+         ReactiveFormsModule 
     ],
     declarations: [
          AppComponent,
