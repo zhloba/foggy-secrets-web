@@ -5,4 +5,11 @@
     padding: 100px;
     text-align: center;
     color: grey;
+    font-weight: normal;
+    display: block;
+    cursor: pointer;
+}
+
+.upload-panel input {
+    display: none;
 }

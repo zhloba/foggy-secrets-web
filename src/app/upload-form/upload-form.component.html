@@ -10,7 +10,8 @@
         </div>
     </div>
 
-    <div dnd-upload (filesAddEmiter)="onAdd($event)" class="upload-panel">
-        Drop files here
-    </div>
+    <label dnd-upload (filesAddEmiter)="onAdd($event)" class="upload-panel">
+        Click or drop files here
+        <input type="file" multiple name="file" (change)="onAdd($event.target.files)">
+    </label>
 </form>
