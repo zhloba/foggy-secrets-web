@@ -129,8 +129,8 @@ export class CryptoService {
 
     getHash(file: File): PromiseLike<Uint8Array> {
 
-        if (file.size > 50 * 1024 * 1024)
-            return new Promise<Uint8Array>(function (resolve, reject) { reject("Size more then 50 Mb!"); });
+        if (file.size > 100 * 1024 * 1024)
+            return new Promise<Uint8Array>(function (resolve, reject) { reject("Size more than 100 Mb!"); });
 
         let context = this;
         let reader = new FileReader();
