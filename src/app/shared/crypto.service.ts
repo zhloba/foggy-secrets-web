@@ -141,7 +141,7 @@ export class CryptoService {
                     {
                         name: "SHA-1",
                     },
-                    reader.result //The data you want to hash as an ArrayBuffer
+                    <BufferSource>reader.result //The data you want to hash as an ArrayBuffer
                 )
                     .then(function (hash) {
                         //returns the hash as an ArrayBuffer
@@ -233,7 +233,7 @@ export class CryptoService {
                 //console.log(new Uint8Array(hmac));
                 //console.log(context.toHexString(new Uint8Array(hmac)));
 
-                resolve(self.verifyHMAC(hash, hmac, password));
+                resolve(self.verifyHMAC(<Uint8Array>hash, <Uint8Array>hmac, password));
             }
             reader.readAsArrayBuffer(file.slice(0, 40));
         });
@@ -265,7 +265,7 @@ export class CryptoService {
                                     iv: iv
                                 },
                                     key, //from generateKey or importKey above
-                                    reader.result //ArrayBuffer of data you want to encrypt
+                                    <BufferSource>reader.result //ArrayBuffer of data you want to encrypt
                                 )
                                     .then(function (encrypted) {
                                         //returns an ArrayBuffer containing the encrypted data
@@ -300,7 +300,7 @@ export class CryptoService {
 
         return new Promise<ArrayBuffer>(function (resolve, reject) {
             reader.onload = function () {
-                let salt = reader.result.slice(40, 56);
+                let salt = <Uint8Array>reader.result.slice(40, 56);
                 let keyPromise = self.deriveKey(password, salt, 100, 'AES-CBC', 256);
                 let ivPromise = self.deriveBits(password, salt, 100, 128);
 
@@ -313,7 +313,7 @@ export class CryptoService {
                             iv: results[1]
                         },
                             results[0], //from generateKey or importKey above
-                            reader.result.slice(56) //ArrayBuffer of data you want to decrypt
+                            <BufferSource>reader.result.slice(56) //ArrayBuffer of data you want to decrypt
                         );
                         resolve(res);
                     }

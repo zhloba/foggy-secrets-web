@@ -28,8 +28,8 @@ export class FileItemComponent {
         return prettyBytes(byte);
     }
 
-    formatDate(date: Date): string {
-        return moment(date).format("l LT");   
+    formatDate(date: number): string {
+        return date.toString(); //moment(date).format("l LT");   
     }
 
 }

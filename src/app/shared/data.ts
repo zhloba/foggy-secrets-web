@@ -6,7 +6,7 @@ export const files: IFileInfo[] = [
         name: 'test-file-1.txt',
         status: FileStatus.Encrypted,
         size: 7855,
-        date: new Date(),
+        lastModified: 0,
         progress: 0,
         file: null     
     },
@@ -14,7 +14,7 @@ export const files: IFileInfo[] = [
         name: 'test-file-2.txt',
         status: FileStatus.Decrypting,
         size: 1245,
-        date: new Date(),
+        lastModified: 0,
         progress: 90,
         file: null   
     }

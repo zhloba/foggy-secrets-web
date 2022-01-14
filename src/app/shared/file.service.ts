@@ -25,7 +25,7 @@ export class FileService {
                 filesList[i].name,
                 FileStatus.Encrypted,
                 filesList[i].size,
-                filesList[i].lastModifiedDate,
+                filesList[i].lastModified,
                 0,
                 filesList[i]
             );
