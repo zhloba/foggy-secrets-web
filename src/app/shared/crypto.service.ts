@@ -1,6 +1,6 @@
 import { FileInfo } from '../shared/file-info'
 import { FileStatus } from '../shared/file-status'
-import { Observable } from 'rxjs/Rx'
+import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 
