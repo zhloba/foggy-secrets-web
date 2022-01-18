@@ -9,22 +9,22 @@
                     aria-valuemax="100"                     
                     [attr.aria-valuenow]="item.progress ? item.progress : 0"  
                     [style.width.%]="item.progress ? item.progress : 0" 
-                    [ngClass]="{ 'hide': item.status == fileStatus.Encrypted || item.status == fileStatus.Decrypted }">
+                    [ngClass]="{ 'hide': item.status === fileStatus.Encrypted || item.status === fileStatus.Decrypted }">
                     <span class="sr-only">{{ item.progress ? item.progress : 0 }}% Complete (success)</span>
                 </div>
 
                 <div class="caption">
                     <div class="row">
                         <div class="col-xs-10">
-                            <h4 class="group inner list-group-item-heading" *ngIf="item.status == fileStatus.Encrypted || item.status == fileStatus.Decrypted">
+                            <h4 class="group inner list-group-item-heading" *ngIf="item.status === fileStatus.Encrypted || item.status === fileStatus.Decrypted">
                                 <a href="#" (click)="onSave()">{{ item.name }}</a>
                             </h4>
-                            <h4 class="group inner list-group-item-heading" *ngIf="item.status == fileStatus.Encrypting || item.status == fileStatus.Decrypting">
+                            <h4 class="group inner list-group-item-heading" *ngIf="item.status === fileStatus.Encrypting || item.status === fileStatus.Decrypting">
                                 {{ item.name }}
                             </h4>
                             <span class="label disable" 
-                                *ngIf="item.status == fileStatus.Encrypted || item.status == fileStatus.Decrypted"
-                                [ngClass]="{ 'label-danger': item.status == fileStatus.Encrypted, 'label-success': item.status == fileStatus.Decrypted }">{{ fileStatus[item.status] }}</span>
+                                *ngIf="item.status === fileStatus.Encrypted || item.status === fileStatus.Decrypted"
+                                [ngClass]="{ 'label-danger': item.status === fileStatus.Encrypted, 'label-success': item.status === fileStatus.Decrypted }">{{ fileStatus[item.status] }}</span>
                             <span class="label label-default">{{ prettifyBytes(item.size) }}</span>
                             <span class="label label-default">{{ formatDate(item.lastModified) }}</span>
                         </div>

@@ -6,11 +6,11 @@ import { CryptoService } from './shared/crypto.service'
     selector: "app",
     templateUrl: "app.component.html" 
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     name = "";
     isBrowserSupported = true;
 
-    constructor(private cryptoService: CryptoService) {        
+    constructor(private cryptoService: CryptoService) {
     }
 
     ngOnInit() {
