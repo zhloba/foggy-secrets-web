@@ -26,7 +26,7 @@
                                 *ngIf="item.status == fileStatus.Encrypted || item.status == fileStatus.Decrypted"
                                 [ngClass]="{ 'label-danger': item.status == fileStatus.Encrypted, 'label-success': item.status == fileStatus.Decrypted }">{{ fileStatus[item.status] }}</span>
                             <span class="label label-default">{{ prettifyBytes(item.size) }}</span>
-                            <span class="label label-default">{{ formatDate(item.date) }}</span>
+                            <span class="label label-default">{{ formatDate(item.lastModified) }}</span>
                         </div>
                         <div class="col-xs-2">
                             <!--<a class="btn btn-success pull-right" href="#">Download</a>-->

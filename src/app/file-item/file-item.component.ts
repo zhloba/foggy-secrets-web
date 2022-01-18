@@ -1,9 +1,9 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
 import { FileInfo } from '../shared/file-info'
 import { FileStatus } from '../shared/file-status'
-import { saveAs } from 'file-saver/FileSaver';
+import { saveAs } from 'file-saver';
 import * as prettyBytes from 'pretty-bytes';
-import * as moment from 'moment';
+//import * as moment from 'moment';
 
 @Component({
     moduleId: module.id,
@@ -28,8 +28,8 @@ export class FileItemComponent {
         return prettyBytes(byte);
     }
 
-    formatDate(date: Date): string {
-        return moment(date).format("l LT");   
+    formatDate(date: number): string {
+        return date.toString(); //moment(date).format("l LT");   
     }
 
 }
