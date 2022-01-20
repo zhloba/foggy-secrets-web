@@ -52,5 +52,6 @@ jobs:
           body: ${{ steps.changelog.outputs.clean_changelog }}
 
       - name: Deploy
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           npm run deploy
