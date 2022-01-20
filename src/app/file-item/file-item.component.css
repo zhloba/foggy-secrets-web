@@ -18,3 +18,7 @@
     position: absolute; 
     width: 100%;   
 }
+
+span.label {
+    margin-right: 5px;
+}
