@@ -5,12 +5,12 @@ on:
       - 'master'
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [16]
+        node-version: [14]
 
     steps:
       - name: Checkout
@@ -29,16 +29,17 @@ jobs:
         run: npm run lint
 
       - name: Build
-        run: npm run build -- --prod
+        run: npm run build
 
       # - name: Test
-      #   run: npm run test -- --prod
+      #   run: npm run test
 
       - name: Create Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ${{ secrets.github_token }}
+          skip-git-pull: "true"
           #output-file: "false"
 
       - name: Create Release
